@@ -19,7 +19,7 @@ const SelfCare = () => {
             email: user.email
         }
 
-        fetch('http://localhost:5000/water', {
+        fetch('http://localhost:5001/water', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(details)
@@ -45,7 +45,7 @@ const SelfCare = () => {
                 <h2 className='text-brand fs-5'>Your Daily Glass of Water Tracker</h2>
                 <div className="row justify-content-between align-items-center">
                     <div className="col-md-8">
-                        <BarChart />
+                        <BarChart label='Water Consumed' title='Water Consumed' bg='rgba(255, 99, 132, 0.5)' chartData={2} />
                     </div>
 
                     <div className="col-md-4 mt-3">

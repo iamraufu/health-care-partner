@@ -19,39 +19,39 @@ ChartJS.register(
   Legend
 );
 
-const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'bottom',
+const BarChart = ({ label, title, bg, chartData }) => {
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+      },
+      title: {
+        display: true,
+        text: `${new Date().toLocaleString('default', { month: 'long' })} ${title}`,
+      },
     },
-    title: {
-      display: true,
-      text: `${new Date().toLocaleString('default', { month: 'long' })} Water Consumed`,
-    },
-  },
-};
+  };
 
-let labels = [];
+  let labels = [];
 
-const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
-for (let i = 1; i <= daysInMonth; i++) {
-  labels.push(i);
-}
+  const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+  for (let i = 1; i <= daysInMonth; i++) {
+    labels.push(i);
+  }
 
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Glass of Water',
-      data: [],
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-    }
-  ],
-};
-
-const BarChart = ({waterData}) => {
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: `${label}`,
+        data: [],
+        backgroundColor: `${bg}`,
+      }
+    ],
+  };
 
   return (
     <Bar style={{ border: '1px solid lightgrey' }} className='bg-white p-2' options={options} data={data} />
