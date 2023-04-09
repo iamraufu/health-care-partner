@@ -6,11 +6,14 @@ import BarChart from '../components/BarChart';
 
 const MentalHealth = () => {
 
-    const { user } = useAuth()
+    const { user, mood, setMood } = useAuth()
     const [moodMeter, setMoodMeter] = useState(5)
 
     const [moodError, setMoodError] = useState('');
     const [moodSuccess, setMoodSuccess] = useState('');
+
+    const [quote, setQuote] = useState('');
+    const [author, setAuthor] = useState('');
 
     const { register, handleSubmit, formState: { errors } } = useForm();
     const onSubmit = data => {
@@ -18,7 +21,8 @@ const MentalHealth = () => {
             meter: parseInt(data.meter),
             note: data.note,
             email: user.email,
-            date: data.date
+            // date: data.date
+            date: new Date().toISOString().split('T')[0]
         }
         fetch('http://localhost:5001/mood', {
             method: 'POST',
@@ -32,19 +36,30 @@ const MentalHealth = () => {
                     setMoodSuccess("")
                 }
                 else {
+                    setMood([...mood,details])
                     setMoodError("")
                     setMoodSuccess(result.message)
                     document.getElementById('mood-form').reset()
                     setMoodMeter(5)
+                    randomQuote()
                 }
             })
+    }
+
+    const randomQuote = () => {
+        fetch('https://api.quotable.io/random')
+        .then(res => res.json())
+        .then(data => {
+            setQuote(data.content)
+            setAuthor(data.author)
+        })
     }
 
     return (
         <div className='bg-brand'>
             <Navbar />
             <div className="container mt-5">
-                <h2 className="text-brand fs-5">Submit your mood meter today</h2>
+                <h5 className="text-brand">Submit your mood meter today</h5>
                 <div className="row justify-content-between align-items-center">
                     <div className="col-md-4">
                         <form id='mood-form' onSubmit={handleSubmit(onSubmit)}>
@@ -54,10 +69,10 @@ const MentalHealth = () => {
                             <p>{errors.meter && <span className='text-danger'>*This field is required</span>}</p>
                             <p className='fs-5 mt-3'>Your Mood Meter: <span className='text-brand fw-bold'>{moodMeter}</span></p>
 
-                            <div className="my-3">
+                            {/* <div className="my-3">
                                 <input type='date' placeholder='Date' className='form-control' {...register("date", { required: true })} />
                                 <p>{errors.date && <span className='text-danger'>*This field is required</span>}</p>
-                            </div>
+                            </div> */}
 
                             <div className="mb-3">
                                 <input type='text' placeholder="Note" {...register("note", { required: true })} className='form-control' />
@@ -67,12 +82,14 @@ const MentalHealth = () => {
                             <p className='text-danger fw-bold'>{moodError}</p>
                             <p className='text-success fw-bold'>{moodSuccess}</p>
 
-                            <button className='btn btn-sm btn-primary px-5'>Submit</button>
+                            <button className='btn btn-primary w-100'>Submit</button>
                         </form>
+                        {quote && <p className='mt-3'>{quote} <br />- {author}</p>}
                     </div>
 
-                    <div className="col-md-8"><BarChart label='Mental Health' title='Mental Health Meter' bg='#' chartData={1} /></div>
+                    <div className="col-md-8 mt-3"><BarChart label='Mental Health' title='Mental Health Meter' bg='rgba(53, 162, 235, 0.5)' chartData={mood} /></div>
                 </div>
+                
             </div>
         </div>
     );

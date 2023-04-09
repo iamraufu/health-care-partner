@@ -37,17 +37,20 @@ const BarChart = ({ label, title, bg, chartData }) => {
   let labels = [];
 
   const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+
   for (let i = 1; i <= daysInMonth; i++) {
     labels.push(i);
   }
 
+  let date = new Date().getMonth() + 1 < 10 ? (`0${new Date().getMonth() + 1}`) : new Date().getMonth() + 1
+  let thisMonthData = chartData.filter(data => data.date.slice(5, 7) === date)
 
   const data = {
     labels,
     datasets: [
       {
         label: `${label}`,
-        data: [],
+        data: thisMonthData.map(data => data.count === undefined ? data.meter : data.count),
         backgroundColor: `${bg}`,
       }
     ],

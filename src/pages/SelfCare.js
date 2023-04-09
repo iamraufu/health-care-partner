@@ -6,7 +6,7 @@ import useAuth from '../hooks/useAuth';
 
 const SelfCare = () => {
 
-    const { user } = useAuth()
+    const { user, water, setWater } = useAuth()
     const [waterError, setWaterError] = useState('');
     const [waterSuccess, setWaterSuccess] = useState('');
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -15,7 +15,8 @@ const SelfCare = () => {
 
         const details = {
             count: parseInt(data.count),
-            date: data.date,
+            // date: data.date,
+            date: new Date().toISOString().split('T')[0],
             email: user.email
         }
 
@@ -32,6 +33,7 @@ const SelfCare = () => {
                 }
                 else {
                     setWaterError("")
+                    setWater([...water,details])
                     setWaterSuccess(result.message)
                     document.getElementById('water-form').reset()
                 }
@@ -45,16 +47,16 @@ const SelfCare = () => {
                 <h2 className='text-brand fs-5'>Your Daily Glass of Water Tracker</h2>
                 <div className="row justify-content-between align-items-center">
                     <div className="col-md-8">
-                        <BarChart label='Water Consumed' title='Water Consumed' bg='rgba(255, 99, 132, 0.5)' chartData={2} />
+                        <BarChart label='Water Consumed' title='Water Consumed' bg='rgba(255, 99, 132, 0.5)' chartData={water} />
                     </div>
 
                     <div className="col-md-4 mt-3">
                         <h2 className='fs-5'>Input Today's Data</h2>
                         <form id='water-form' onSubmit={handleSubmit(onSubmit)}>
-                            <div className="my-3">
+                            {/* <div className="my-3">
                                 <input type='date' placeholder='Date' className='form-control' {...register("date", { required: true })} />
                                 <p>{errors.date && <span className='text-danger'>*This field is required</span>}</p>
-                            </div>
+                            </div> */}
 
                             <div className="my-3">
                                 <input min='0' type='number' placeholder='Glass of Water' className='form-control' {...register("count", { required: true })} />
