@@ -40,8 +40,6 @@ const SelfCare = () => {
             })
     }
 
-    console.log(water, water[0].date, water[0].count);
-
     return (
         <div className='bg-brand'>
             <Navbar />
